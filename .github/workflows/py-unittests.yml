@@ -23,4 +23,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Tests
-        run: python -m unittest src/tests/**/*.py
+        run: python -m unittest -v src/tests/**/*.py
