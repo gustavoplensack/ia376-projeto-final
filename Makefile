@@ -9,8 +9,8 @@ BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = efficient5-pretrain
 PYTHON_INTERPRETER = python3
-GDRIVE_OCR_FILE_ID = 15a9tjbywu7KCC50hdY4bQPm5epfx1hss
-OCR_DATASET_FILENAME=SROIE2019.csv
+GDRIVE_OCR_FILE_ID = 14Qg19N1NQQfRxQC460O-ts0uFWi5AXn7
+OCR_DATASET_FILENAME=SROIE2019
 GDRIVE_SROIE_FILE_ID = 1yu4E1vNqrg5KW5HyEuDv6HQVdxnBgakg
 SROIE_DATASET_FILENAME=dataset_sroie_icdar_2019
 
@@ -31,7 +31,8 @@ requirements: test_environment
 # Download and unzip data from google drive
 download-data:
 	mkdir -p data
-	wget -q -N --no-check-certificate -r 'https://docs.google.com/uc?export=download&id=$(GDRIVE_OCR_FILE_ID)' -O 'data/$(OCR_DATASET_FILENAME)'
+	wget -q -N --no-check-certificate -r 'https://docs.google.com/uc?export=download&id=$(GDRIVE_OCR_FILE_ID)' -O 'data/$(OCR_DATASET_FILENAME).zip'
+	unzip -q 'data/$(OCR_DATASET_FILENAME).zip' -d './data/'
 	wget -q -N --no-check-certificate -r 'https://docs.google.com/uc?export=download&id=$(GDRIVE_SROIE_FILE_ID)' -O 'data/$(SROIE_DATASET_FILENAME).zip'
 	unzip -q 'data/$(SROIE_DATASET_FILENAME).zip' -d './data/'
 
