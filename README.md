@@ -53,4 +53,22 @@ Can be found at this [GitHub Project](https://github.com/gustavoplensack/ia376-p
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 -----
 
+# Usage instructions
+
+Install requirements (consider using a virtualenv)
+```sh
+    make requirements
+```
+
+Download data
+```sh
+    make download-data
+```
+
+Train model
+```sh
+    make train-model
+```
+
+
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
