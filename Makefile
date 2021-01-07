@@ -26,7 +26,7 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+	$(PYTHON_INTERPRETER) -m pip install --quiet -r requirements.txt
 
 # Download and unzip data from google drive
 download-data:
