@@ -104,6 +104,7 @@ def main():
                          resume_from_checkpoint=resume_from_checkpoint)
 
     trainer.fit(model)
+    trainer.test(model)
     return
 
 
