@@ -10,7 +10,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 
 train_files = f'{PROJECT_ROOT}/data/train'
-train_csv_path = f'{PROJECT_ROOT}/data/SROIE2019.csv'
+train_csv_path = f'{PROJECT_ROOT}/data/ocr_baseline.csv'
 
 dataset = OCRDataset(train_files, train_csv_path)
 
