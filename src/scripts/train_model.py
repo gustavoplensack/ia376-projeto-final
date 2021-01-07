@@ -3,10 +3,9 @@ This file implements the training script
 '''
 import os
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple, Union
 
 import pytorch_lightning as pl
-import torch
 from decouple import config
 from pytorch_lightning import seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -17,7 +16,10 @@ from src.models import T5Module
 
 # Get envvars
 BATCH_SIZE = config('BATCH_SIZE', default=8, cast=int)
-BATCH_SIZE = config('BATCH_SIZE', default=8, cast=int)
+CHECKPOINTS_PATH = config('CHECKPOINTS_PATH', default='.', cast=str)
+EXPERIMENTS_SEED = config('EXPERIMENTS_SEED', default=42, cast=int)
+T5_TYPE = config('T5_TYPE', default='t5-small', cast=str)
+N_EPOCHS = config('N_EPOCHS', default=50, cat=int)
 
 # Get project root
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -64,47 +66,92 @@ def _make_dataloader(dataset: OCRDataset, is_train: bool = True) -> DataLoader:
     return DataLoader(dataset, batch_size=batch_size, shuffle=is_train)
 
 
+def _get_checkpoints_from_path(path: str, file_type: str = '.ckpt',
+                               sort: bool = True) -> Union[List[str], None]:
+    '''
+    Gets all the checkpoint files from a given path.
+
+    Args:
+
+        - path: path to checkpoint files.
+        - file_extension: checkpoint files extension.
+        - sort: if the results are sorted or not.
+
+    Returns:
+
+        - A list of the available checkpoints.
+    '''
+    # Get all files in the path
+    files_in_checkpoint_path = os.listdir(f'{CHECKPOINTS_PATH}')
+
+    # list all checkpoints
+    checkpoints = [
+        ckpt for ckpt in files_in_checkpoint_path if ckpt.endswith('.ckpt')
+    ]
+
+    if len(checkpoints) == 0:
+        print('WARNING: No checkpoint found!')
+        return None
+
+    return sorted(checkpoints) if sort else checkpoints
+
+
+def _configure_trainer() -> pl.Trainer:
+    '''
+    Configures PL trainer from the .env settings.
+
+    Returns:
+        - A pl.Trainer instance configured with data.
+    '''
+
+    print(f'Checkpoints will be saved to {CHECKPOINTS_PATH}')
+    checkpoint_callback = ModelCheckpoint(filepath=CHECKPOINTS_PATH,
+                                          # Keeps all checkpoints.
+                                          save_top_k=-1,
+                                          monitor='val_f1')
+
+    checkpoints = _get_checkpoints_from_path(CHECKPOINTS_PATH, sort=True)
+    print(f'Available checkpoints in {CHECKPOINTS_PATH}: {checkpoints}')
+
+    latest_checkpoint = None
+    if checkpoints is not None:
+        latest_checkpoint = checkpoints[-1]
+        print(
+            f'Using latest checkpoint {latest_checkpoint}'
+            ' as a starting point')
+        latest_checkpoint_path = f'{CHECKPOINTS_PATH}/{latest_checkpoint}'
+
+    trainer = pl.Trainer(gpus=-1,
+                         max_epochs=N_EPOCHS,
+                         check_val_every_n_epoch=1,
+                         profiler=True,
+                         checkpoint_callback=checkpoint_callback,
+                         progress_bar_refresh_rate=20,
+                         resume_from_checkpoint=latest_checkpoint_path)
+
+    return trainer
+
+
 def main():
     '''
     Instantiates datasets, dataloaders and model.
 
     Then it starts training!
     '''
-    seed_everything(42)
+    seed_everything(EXPERIMENTS_SEED)
 
     print('Instantiating datasets ...')
     train_dataset, test_dataset = _make_datasets()
 
+    print('Instantiating dataloaders ...')
     train_dataloader = _make_dataloader(train_dataset, is_train=True)
     test_dataloader = _make_dataloader(test_dataset, is_train=False)
 
+    print(f'Instantiating T5 module with a {T5_TYPE} ...')
     model = T5Module(train_dataloader, test_dataloader, test_dataloader)
 
-    checkpoint_path = './epoch=49.ckpt'
-    checkpoint_dir = os.path.dirname(os.path.abspath(checkpoint_path))
-    print(f'Files in {checkpoint_dir}: {os.listdir(checkpoint_dir)}')
-    print(f'Saving checkpoints to {checkpoint_dir}')
-    checkpoint_callback = ModelCheckpoint(filepath=checkpoint_dir,
-                                          # Keeps all checkpoints.
-                                          save_top_k=-1,
-                                          monitor='val_f1')
-
-    resume_from_checkpoint = None
-    if os.path.exists(checkpoint_path):
-        print(f'Restoring checkpoint: {checkpoint_path}')
-        resume_from_checkpoint = checkpoint_path
-        print('Using checkpoint:', resume_from_checkpoint)
-
-    trainer = pl.Trainer(gpus=1,
-                         max_epochs=1,
-                         check_val_every_n_epoch=1,
-                         profiler=True,
-                         checkpoint_callback=checkpoint_callback,
-                         progress_bar_refresh_rate=50,
-                         resume_from_checkpoint=resume_from_checkpoint)
-
+    trainer = _configure_trainer()
     trainer.fit(model)
-    trainer.test(model)
     return
 
 
