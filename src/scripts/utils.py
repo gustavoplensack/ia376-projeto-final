@@ -115,7 +115,7 @@ def _configure_trainer() -> pl.Trainer:
     checkpoints = _get_checkpoints_from_path(CHECKPOINTS_PATH, sort=True)
     print(f'Available checkpoints in {CHECKPOINTS_PATH}: {checkpoints}')
 
-    latest_checkpoint = None
+    latest_checkpoint_path = None
     if checkpoints is not None:
         latest_checkpoint = checkpoints[-1]
         print(
@@ -123,12 +123,12 @@ def _configure_trainer() -> pl.Trainer:
             ' as a starting point')
         latest_checkpoint_path = f'{CHECKPOINTS_PATH}/{latest_checkpoint}'
 
-    trainer = pl.Trainer(  # gpus=-1,
-        max_epochs=N_EPOCHS,
-        check_val_every_n_epoch=1,
-        profiler=True,
-        checkpoint_callback=checkpoint_callback,
-        progress_bar_refresh_rate=20,
-        resume_from_checkpoint=latest_checkpoint_path)
+    trainer = pl.Trainer(gpus=-1,
+                         max_epochs=N_EPOCHS,
+                         check_val_every_n_epoch=1,
+                         profiler=True,
+                         checkpoint_callback=checkpoint_callback,
+                         progress_bar_refresh_rate=20,
+                         resume_from_checkpoint=latest_checkpoint_path)
 
     return trainer
