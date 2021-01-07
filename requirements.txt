@@ -47,6 +47,7 @@ networkx==2.4
 numpy==1.19.4
 oauthlib==3.1.0
 packaging==20.4
+pandas==0.20.3
 pathlib2==2.3.5
 pathspec==0.8.1
 phonenumbers==8.12.13
@@ -64,6 +65,7 @@ pygtrie==2.3.2
 pyparsing==2.4.7
 python-benedict==0.22.0
 python-dateutil==2.8.1
+python-decouple==3.3
 python-slugify==4.0.1
 pytorch-lightning==1.0.7
 PyYAML==5.3.1
