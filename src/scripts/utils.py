@@ -9,10 +9,10 @@ from typing import List, Tuple, Union
 import pytorch_lightning as pl
 from decouple import config
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.loggers import NeptuneLogger
 from torch.utils.data import DataLoader
 
 from src.data import OCRDataset
+from src.log.nepune_logger import NEPTUNE_LOGGER
 
 # Get envvars
 BATCH_SIZE = config('BATCH_SIZE', default=8, cast=int)
@@ -32,33 +32,6 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 TRAIN_FILES = f'{PROJECT_ROOT}/data/train'
 TEST_FILES = f'{PROJECT_ROOT}/data/test'
 GCV_OCR_CSV = f'{PROJECT_ROOT}/data/ocr_baseline.csv'
-
-
-# Neptune confs
-NEPTUNE_API_TOKEN = config(
-    'NEPTUNE_API_TOKEN', default='', cast=str)
-NEPTUNE_PROJECT = config(
-    'NEPTUNE_PROJECT', default='gplensack/IA376-Final', cast=str)
-NEPTUNE_EXPERIMENT_NAME = config(
-    'NEPTUNE_EXPERIMENT_NAME', default='teste', cast=str)
-
-
-# Usage of NeptuneLogger based on:
-# https://towardsdatascience.com/how-to-keep-track-of-pytorch-lightning-experiments-with-neptune-af467ec05600
-NEPTUNE_LOGGER = NeptuneLogger(
-    api_key=NEPTUNE_API_TOKEN,
-    project_name=NEPTUNE_PROJECT,
-    close_after_fit=True,
-    experiment_name=NEPTUNE_EXPERIMENT_NAME,
-    params={
-        'BATCH_SIZE': BATCH_SIZE,
-        'CHECKPOINTS_PATH': CHECKPOINTS_PATH,
-        'EXPERIMENTS_SEED': EXPERIMENTS_SEED,
-        'T5_TYPE': T5_TYPE,
-        'SEQ_LEN': SEQ_LEN,
-        'LEARNING_RATE': LEARNING_RATE,
-        'N_EPOCHS': N_EPOCHS,
-    })
 
 
 def _make_datasets() -> Tuple[OCRDataset, OCRDataset]:

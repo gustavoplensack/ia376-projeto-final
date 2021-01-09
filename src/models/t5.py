@@ -3,7 +3,6 @@ Implements PL module for T5
 '''
 from random import choice
 
-import neptune
 import pytorch_lightning as pl
 from decouple import config
 from numpy import average
@@ -11,6 +10,7 @@ from torch import optim, stack
 from torch.utils.data import DataLoader
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
+from src.log.nepune_logger import NEPTUNE_LOGGER
 from src.metrics import compute_exact_match, compute_f1
 
 # Experiment configuration
@@ -71,7 +71,6 @@ class T5Module(pl.LightningModule):
         loss = stack([x['loss'] for x in outputs]).mean()
 
         self.log('train_loss', loss)
-        neptune.log_metric('train_loss', loss)
 
         return
 
@@ -93,8 +92,9 @@ class T5Module(pl.LightningModule):
         # Select a random sample from the trues and preds
         true, pred = choice(list(zip(trues, preds)))
 
-        neptune.log_text('pred_vs_target',
-                         f"Epoch: {self.current_epoch} \n tgt: {true}\n prd: {pred}\n")
+        NEPTUNE_LOGGER.experiment.log_text(
+            'pred_vs_target',
+            f"Epoch: {self.current_epoch} \n tgt: {true}\n prd: {pred}\n")
 
         em = average([compute_exact_match(g, r) for g, r in zip(preds, trues)])
         f1 = average([compute_f1(g, r) for g, r in zip(preds, trues)])
