@@ -23,7 +23,7 @@ T5_TOK = T5Tokenizer.from_pretrained(T5_TYPE)
 
 
 # Neptune confs
-NEPTUNE_TOKEN = config(
+NEPTUNE_API_TOKEN = config(
     'NEPTUNE_TOKEN', default=neptune.ANONYMOUS_API_TOKEN, cast=str)
 NEPTUNE_PROJECT = config(
     'NEPTUNE_PROJECT', default='gplensack/IA376-Final', cast=str)
@@ -52,7 +52,7 @@ class T5Module(pl.LightningModule):
         self._test_dataloader = test_dataloader
 
         # Neptune confs
-        neptune.init(NEPTUNE_PROJECT, NEPTUNE_TOKEN)
+        neptune.init(NEPTUNE_PROJECT, NEPTUNE_API_TOKEN)
         neptune.create_experiment(name=NEPTUNE_EXPERIMENT_NAME)
 
     def forward(self, x_tokens, x_mask, x_original,
