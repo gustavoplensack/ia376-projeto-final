@@ -36,7 +36,7 @@ GCV_OCR_CSV = f'{PROJECT_ROOT}/data/ocr_baseline.csv'
 
 # Neptune confs
 NEPTUNE_API_TOKEN = config(
-    'NEPTUNE_API_TOKEN', default=neptune.ANONYMOUS_API_TOKEN, cast=str)
+    'NEPTUNE_API_TOKEN', default='', cast=str)
 NEPTUNE_PROJECT = config(
     'NEPTUNE_PROJECT', default='gplensack/IA376-Final', cast=str)
 NEPTUNE_EXPERIMENT_NAME = config(
