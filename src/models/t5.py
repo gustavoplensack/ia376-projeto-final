@@ -22,15 +22,6 @@ LEARNING_RATE = config('LEARNING_RATE', default=3e-4, cast=float)
 T5_TOK = T5Tokenizer.from_pretrained(T5_TYPE)
 
 
-# Neptune confs
-NEPTUNE_API_TOKEN = config(
-    'NEPTUNE_API_TOKEN', default=neptune.ANONYMOUS_API_TOKEN, cast=str)
-NEPTUNE_PROJECT = config(
-    'NEPTUNE_PROJECT', default='gplensack/IA376-Final', cast=str)
-NEPTUNE_EXPERIMENT_NAME = config(
-    'NEPTUNE_EXPERIMENT_NAME', default='teste', cast=str)
-
-
 class T5Module(pl.LightningModule):
     '''
     Neural network built with an efficient-net for image feature extraction and
@@ -50,10 +41,6 @@ class T5Module(pl.LightningModule):
         self._train_dataloader = train_dataloader
         self._val_dataloader = val_dataloader
         self._test_dataloader = test_dataloader
-
-        # Neptune confs
-        neptune.init(NEPTUNE_PROJECT, NEPTUNE_API_TOKEN)
-        neptune.create_experiment(name=NEPTUNE_EXPERIMENT_NAME)
 
     def forward(self, x_tokens, x_mask, x_original,
                 y_tokens, y_mask, y_original):
@@ -113,8 +100,6 @@ class T5Module(pl.LightningModule):
         f1 = average([compute_f1(g, r) for g, r in zip(preds, trues)])
 
         # Logging metrics
-        neptune.log_metric('val_em', em)
-        neptune.log_metric('val_f1', f1)
         self.log("val_em", em, prog_bar=True)
         self.log("val_f1", f1, prog_bar=True)
 
@@ -144,8 +129,6 @@ class T5Module(pl.LightningModule):
         f1 = average([compute_f1(g, r) for g, r in zip(preds, trues)])
 
         # Logging metrics
-        neptune.log_metric('test_em', em)
-        neptune.log_metric('test_f1', f1)
         self.log("test_em", em, prog_bar=True)
         self.log("test_f1", f1, prog_bar=True)
 
