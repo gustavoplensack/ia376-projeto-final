@@ -24,7 +24,7 @@ T5_TOK = T5Tokenizer.from_pretrained(T5_TYPE)
 
 # Neptune confs
 NEPTUNE_API_TOKEN = config(
-    'NEPTUNE_TOKEN', default=neptune.ANONYMOUS_API_TOKEN, cast=str)
+    'NEPTUNE_API_TOKEN', default=neptune.ANONYMOUS_API_TOKEN, cast=str)
 NEPTUNE_PROJECT = config(
     'NEPTUNE_PROJECT', default='gplensack/IA376-Final', cast=str)
 NEPTUNE_EXPERIMENT_NAME = config(
