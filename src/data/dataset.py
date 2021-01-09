@@ -66,7 +66,7 @@ class OCRDataset(Dataset):
 
         return f'company: {company}, address: {address}'
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
 
         _, txt_file = self._dataset[idx]
 
@@ -74,12 +74,12 @@ class OCRDataset(Dataset):
         source = self.index_csv_from_current_sample(txt_file)
 
         source_tokenized = self._tokenizer.encode_plus(source,
-                                                       pad_to_max_length=True,
+                                                       truncation=True,
                                                        max_length=SEQ_LEN,
                                                        return_tensors='pt')
 
         target_tokenized = self._tokenizer.encode_plus(target,
-                                                       pad_to_max_length=True,
+                                                       truncation=True,
                                                        max_length=SEQ_LEN,
                                                        return_tensors='pt')
 
