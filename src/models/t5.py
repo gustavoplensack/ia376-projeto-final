@@ -83,10 +83,10 @@ class T5Module(pl.LightningModule):
     def training_epoch_end(self, outputs):
         loss = stack([x['loss'] for x in outputs]).mean()
 
-        tqdm_dict = {"train_loss": loss}
+        self.log('train_loss', loss)
         neptune.log_metric('train_loss', loss)
 
-        return {"progress_bar": tqdm_dict}
+        return
 
     def validation_step(self, batch, batch_idx):
         x_tokens, x_mask, x_original, y_tokens, y_mask, y_original = batch
