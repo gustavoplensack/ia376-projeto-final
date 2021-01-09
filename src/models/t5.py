@@ -106,8 +106,8 @@ class T5Module(pl.LightningModule):
         # Select a random sample from the trues and preds
         true, pred = choice(list(zip(trues, preds)))
 
-        neptune.log_text(
-            f"Epoch: {self.current_epoch} \n tgt: {true}\n prd: {pred}\n")
+        neptune.log_text('pred_vs_target',
+                         f"Epoch: {self.current_epoch} \n tgt: {true}\n prd: {pred}\n")
 
         em = average([compute_exact_match(g, r) for g, r in zip(preds, trues)])
         f1 = average([compute_f1(g, r) for g, r in zip(preds, trues)])
