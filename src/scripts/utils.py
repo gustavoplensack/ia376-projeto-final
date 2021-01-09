@@ -12,12 +12,15 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from torch.utils.data import DataLoader
 
 from src.data import OCRDataset
+from src.log.nepune_logger import NEPTUNE_LOGGER
 
 # Get envvars
 BATCH_SIZE = config('BATCH_SIZE', default=8, cast=int)
 CHECKPOINTS_PATH = config('CHECKPOINTS_PATH', default='.', cast=str)
 EXPERIMENTS_SEED = config('EXPERIMENTS_SEED', default=42, cast=int)
 T5_TYPE = config('T5_TYPE', default='t5-small', cast=str)
+SEQ_LEN = config('SEQ_LEN', default=128, cast=int)
+LEARNING_RATE = config('LEARNING_RATE', default=3e-4, cast=float)
 N_EPOCHS = config('N_EPOCHS', default=50, cast=int)
 
 
@@ -129,6 +132,7 @@ def _configure_trainer() -> pl.Trainer:
                          profiler=True,
                          checkpoint_callback=checkpoint_callback,
                          progress_bar_refresh_rate=20,
-                         resume_from_checkpoint=latest_checkpoint_path)
+                         resume_from_checkpoint=latest_checkpoint_path,
+                         logger=NEPTUNE_LOGGER)
 
     return trainer

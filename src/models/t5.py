@@ -10,6 +10,7 @@ from torch import optim, stack
 from torch.utils.data import DataLoader
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
+from src.log.nepune_logger import NEPTUNE_LOGGER
 from src.metrics import compute_exact_match, compute_f1
 
 # Experiment configuration
@@ -64,14 +65,14 @@ class T5Module(pl.LightningModule):
         loss = self(x_tokens, x_mask, x_original,
                     y_tokens, y_mask, y_original)
 
-        return {"loss": loss, "log": {"step_loss": loss}}
+        return {"loss": loss}
 
     def training_epoch_end(self, outputs):
         loss = stack([x['loss'] for x in outputs]).mean()
 
-        tqdm_dict = {"train_loss": loss}
+        self.log('train_loss', loss)
 
-        return {"log": tqdm_dict, "progress_bar": tqdm_dict}
+        return
 
     def validation_step(self, batch, batch_idx):
         x_tokens, x_mask, x_original, y_tokens, y_mask, y_original = batch
@@ -91,11 +92,14 @@ class T5Module(pl.LightningModule):
         # Select a random sample from the trues and preds
         true, pred = choice(list(zip(trues, preds)))
 
-        print(f"\n tgt: {true}\n prd: {pred}\n")
+        NEPTUNE_LOGGER.experiment.log_text(
+            'pred_vs_target',
+            f"Epoch: {self.current_epoch} \n tgt: {true}\n prd: {pred}\n")
 
         em = average([compute_exact_match(g, r) for g, r in zip(preds, trues)])
         f1 = average([compute_f1(g, r) for g, r in zip(preds, trues)])
 
+        # Logging metrics
         self.log("val_em", em, prog_bar=True)
         self.log("val_f1", f1, prog_bar=True)
 
@@ -124,6 +128,7 @@ class T5Module(pl.LightningModule):
         em = average([compute_exact_match(g, r) for g, r in zip(preds, trues)])
         f1 = average([compute_f1(g, r) for g, r in zip(preds, trues)])
 
+        # Logging metrics
         self.log("test_em", em, prog_bar=True)
         self.log("test_f1", f1, prog_bar=True)
 

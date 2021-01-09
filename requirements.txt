@@ -1,4 +1,5 @@
 cookiecutter==1.7.2
+neptune-client==0.4.130
 numpy==1.19.4
 pandas==0.20.3
 python-decouple==3.3
