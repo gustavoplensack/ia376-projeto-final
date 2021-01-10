@@ -93,3 +93,6 @@ target/
 
 # Mypy cache
 .mypy_cache/
+
+# Local development file for testing 
+test.py
