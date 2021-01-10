@@ -38,7 +38,7 @@ download-data:
 
 ## Make Dataset
 data:
-	$(PYTHON_INTERPRETER) -m src.data.scripts.make_dataset.py
+	$(PYTHON_INTERPRETER) -m src.data.scripts.make_single_key_dataset.py
 
 ## Delete all compiled Python files
 clean:
