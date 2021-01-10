@@ -77,12 +77,12 @@ class BaselineDataset(Dataset):
         source = self.index_csv_from_current_sample(txt_file)
 
         source_tokenized = self._tokenizer.encode_plus(source,
-                                                       truncation=True,
+                                                       pad_to_max_length=True,
                                                        max_length=SEQ_LEN,
                                                        return_tensors='pt')
 
         target_tokenized = self._tokenizer.encode_plus(target,
-                                                       truncation=True,
+                                                       pad_to_max_length=True,
                                                        max_length=SEQ_LEN,
                                                        return_tensors='pt')
 
