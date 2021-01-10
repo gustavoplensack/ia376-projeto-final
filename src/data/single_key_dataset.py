@@ -24,7 +24,7 @@ class SingleKeyDataset(Dataset):
     This represents the single-key experiment, where only 'address' and
     'company' are evaluated at a single pred for each.
 
-    Data is prefixed with 'address' or 'company' as input. 
+    Data is prefixed with 'address' or 'company' as input.
 
     Args:
 
@@ -45,8 +45,6 @@ class SingleKeyDataset(Dataset):
         # cleans the 'slice/FILE.txt' to be only SLICE.
         cleaned_file_name = file_name.split('/')[-1]
         cleaned_file_name = cleaned_file_name.split('.')[0]
-
-        print(cleaned_file_name)
 
         ocrized_sample = \
             self.csv_file.loc[cleaned_file_name]['ocr_gvision_output']
