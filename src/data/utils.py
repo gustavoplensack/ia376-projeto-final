@@ -5,7 +5,7 @@ import glob
 from typing import List
 
 
-def load_text_jpeg_pairs(path_to_files: str) -> List[(str)]:
+def load_text_jpeg_pairs(path_to_files: str) -> List[Tuple[str]]:
     '''
     Returns a list with tuples of [(path_to_image, path_to_text)].
 
