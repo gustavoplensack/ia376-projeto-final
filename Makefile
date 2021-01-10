@@ -37,8 +37,8 @@ download-data:
 	unzip -q 'data/$(SROIE_DATASET_FILENAME).zip' -d './data/'
 
 ## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+data:
+	$(PYTHON_INTERPRETER) -m src.data.scripts.make_single_key_dataset.py
 
 ## Delete all compiled Python files
 clean:
@@ -51,7 +51,7 @@ lint:
 
 
 train:
-	python -m src.scripts.train_model.py
+	$(PYTHON_INTERPRETER) -m src.scripts.train_model.py
 
 ## Set up python interpreter environment
 create_environment:

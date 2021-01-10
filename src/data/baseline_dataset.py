@@ -15,11 +15,14 @@ T5_TYPE = config('T5_TYPE', default='t5-small', cast=str)
 SEQ_LEN = config('SEQ_LEN', default=128, cast=int)
 
 
-class OCRDataset(Dataset):
+class BaselineDataset(Dataset):
     '''
     Pytorch's dataset abstraction to build images from text GCV OCR of the
     recipts alongside with the document annotations provided by the SROIE
     official dataset.
+
+    This represents the baseline experiment, where only 'address' and 'company'
+    are evaluated at a unique prediction.
 
     Args:
 
@@ -66,7 +69,7 @@ class OCRDataset(Dataset):
 
         return f'company: {company}, address: {address}'
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
 
         _, txt_file = self._dataset[idx]
 

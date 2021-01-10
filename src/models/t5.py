@@ -24,8 +24,7 @@ T5_TOK = T5Tokenizer.from_pretrained(T5_TYPE)
 
 class T5Module(pl.LightningModule):
     '''
-    Neural network built with an efficient-net for image feature extraction and
-    a T5 for text generation.
+    T5 Module for key information extraction.
     '''
 
     def __init__(self, train_dataloader: DataLoader,
