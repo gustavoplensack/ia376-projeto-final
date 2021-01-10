@@ -70,8 +70,8 @@ def load_text_jpeg_pairs(path_to_files: str) -> List[Tuple[str]]:
 
     '''
 
-    img_files = glob.glob(f'{path_to_files}/*.jpg')
-    txt_files = glob.glob(f'{path_to_files}/*.txt')
+    img_files = glob.glob(f'{path_to_files}/*.jpg*')
+    txt_files = glob.glob(f'{path_to_files}/*.txt*')
 
     # sortind data, to assert that the data is organized
     img_files.sort()
