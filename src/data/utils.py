@@ -7,10 +7,16 @@ from typing import List
 
 def load_text_jpeg_pairs(path_to_files: str) -> List[Tuple[str]]:
     '''
-    Returns a list with tuples of [(path_to_image, path_to_text)].
+    Load text and jped samples from path_to_files
 
     Args:
-        - path_to_files (str): The path to the files.
+
+        - path_to_files: The path to the files.
+
+    Returns:
+
+        - A list of tuples of [(path_to_image, path_to_text)].
+
     '''
 
     img_files = glob.glob(f'{path_to_files}/*.jpg')
