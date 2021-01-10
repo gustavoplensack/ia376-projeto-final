@@ -91,12 +91,12 @@ class SingleKeyDataset(Dataset):
         source = self.get_padded_input(txt_file)
 
         source_tokenized = self._tokenizer.encode_plus(source,
-                                                       padding='max_lenght',
+                                                       pad_to_max_length=True,
                                                        max_length=SEQ_LEN,
                                                        return_tensors='pt')
 
         target_tokenized = self._tokenizer.encode_plus(target,
-                                                       padding='max_lenght',
+                                                       pad_to_max_length=True,
                                                        max_length=SEQ_LEN,
                                                        return_tensors='pt')
 
