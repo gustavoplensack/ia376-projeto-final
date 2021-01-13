@@ -81,7 +81,7 @@ class SingleKeyDataset(Dataset):
 
         sample = data.get(info_key, '')
 
-        return f'{info_key}: {sample}'
+        return f'{sample}'
 
     def __getitem__(self, idx: int):
 
